@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#1e293b">
+    <meta name="description" content="Sistema de Ordens de Serviço - SEDUC">
+    <title>Login - T.I SYSTEM SME</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/logo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo-container">
+                <div class="logo-complex">
+                    <div class="logo-orbit orbit-1"></div>
+                    <div class="logo-orbit orbit-2"></div>
+                    <div class="logo-core"></div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="logo-title">T.I<span> SYSTEM</span></h1>
+                    <p class="logo-subtitle">SME • PARACURU</p>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">E-mail Institucional</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        required 
+                        placeholder="seu.email@gmail.com"
+                        autocomplete="email"
+                        aria-label="E-mail institucional">
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password"
+                        required 
+                        placeholder="Digite sua senha"
+                        autocomplete="current-password"
+                        aria-label="Senha de acesso">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px; height: 44px;">
+                    Acessar Sistema
+                </button>
+                <div id="errorMessage" class="hidden" style="margin-top: 16px; padding: 12px 14px; background: #fee2e2; border-radius: 6px; border: 1px solid #fecaca; color: #991b1b; font-size: 13px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText">E-mail ou senha incorretos.</span>
+                </div>
+            </form>
+
+            <div style="margin-top: 10px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <p style="font-size: 10px; color: var(--secondary); line-height: 1.6;">
+                    Não tem uma conta? Entre em contato com o suporte da TI para solicitar seu acesso.
+                </p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 10px; text-align: center; color: var(--secondary); font-size: 8px; font-weight: 300;">
+            &copy; 2026 Secretaria de Educação de Paracuru - Departamento de T.I
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

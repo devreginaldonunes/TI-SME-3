@@ -1,0 +1,143 @@
+/* Logo Minimalista e Moderno para T.I SYSTEM SME */
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.logo-complex {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* O "Coração" do logo - Minimalista */
+.logo-core {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    border-radius: 8px;
+    transform: rotate(45deg);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Elementos de Complexidade - Linhas Geométricas */
+.logo-orbit {
+    position: absolute;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    transition: all 0.8s ease;
+}
+
+.orbit-1 {
+    width: 60px;
+    height: 60px;
+    border-style: dashed;
+    animation: rotate 10s linear infinite;
+}
+
+.orbit-2 {
+    width: 80px;
+    height: 80px;
+    border-color: var(--accent);
+    opacity: 0.2;
+    animation: rotate 15s linear infinite reverse;
+}
+
+/* Tipografia Minimalista */
+.logo-text {
+    text-align: center;
+}
+
+.logo-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--primary);
+    margin: 0;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.logo-title span {
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-subtitle {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--secondary);
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* Animações para o visual "Complexo" */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Efeito Hover */
+.logo-container:hover .logo-core {
+    transform: rotate(225deg) scale(1.1);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+}
+
+.logo-container:hover .orbit-1 {
+    width: 70px;
+    height: 70px;
+    opacity: 0.5;
+}
+
+/* Ajustes para a Sidebar */
+.sidebar .logo-container {
+    padding: 10px 0;
+    margin-bottom: 30px;
+}
+
+.sidebar .logo-complex {
+    width: 50px;
+    height: 50px;
+}
+
+.sidebar .logo-core {
+    width: 25px;
+    height: 25px;
+}
+
+.sidebar .orbit-1 { width: 35px; height: 35px; }
+.sidebar .orbit-2 { width: 50px; height: 50px; }
+
+.sidebar .logo-title {
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.sidebar .logo-subtitle {
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .logo-orbit {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .orbit-2 {
+    border-color: var(--accent);
+}

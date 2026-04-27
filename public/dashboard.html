@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#1e293b">
+    <meta name="description" content="Dashboard - Sistema de Ordens de Serviço SEDUC">
+    <title>Dashboard - T.I SYSTEM SME</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/logo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PDF Logic moved to Server-Side for Professional Results -->
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-top-bar">
+        <div class="mobile-left">
+            <button class="menu-toggle-btn" onclick="toggleSidebar()" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="mobile-logo" style="display: flex; align-items: center; gap: 8px;">
+                <div class="logo-complex" style="width: 24px; height: 24px; margin-bottom: 0;">
+                    <div class="logo-core" style="width: 12px; height: 12px;"></div>
+                </div>
+                <span style="font-weight: 800; letter-spacing: 1px; font-size: 14px;">T.I<span> SYSTEM</span></span>
+            </div>
+        </div>
+        <div class="mobile-actions">
+            <button class="theme-toggle-mobile" onclick="toggleTheme()" aria-label="Alternar tema">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="user-minimal" onclick="showSection('overview')">
+                <span id="userNameMobile">Usuário</span>
+                <div class="user-avatar-sm" id="userInitialMobile">U</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" role="navigation" aria-label="Menu principal">
+            <div class="logo-container">
+                <div class="logo-complex">
+                    <div class="logo-orbit orbit-1"></div>
+                    <div class="logo-orbit orbit-2"></div>
+                    <div class="logo-core"></div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="logo-title">T.I<span> SYSTEM</span></h1>
+                    <p class="logo-subtitle">SME • PARACURU</p>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="#" id="nav-overview" class="active" onclick="showSection('overview')"
+                        aria-label="Visão Geral">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Visão Geral</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="nav-orders" onclick="showSection('orders')" aria-label="Chamados">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Chamados</span>
+                    </a>
+                </li>
+                <li id="adminOnlyUsers">
+                    <a href="#" id="nav-users" onclick="showSection('users')" aria-label="Usuários">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()" aria-label="Sair do sistema">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" role="main">
+            <header>
+                <div>
+                    <h1 id="sectionTitle">Bem-vindo</h1>
+                    <p id="currentDate"></p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema"
+                        aria-label="Alternar tema claro/escuro">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitial">U</div>
+                        <div>
+                            <div id="userName" style="font-weight: 600; font-size: 14px; line-height: 1.3;">
+                                Carregando...</div>
+                            <div id="userRoleDisplay"
+                                style="font-size: 12px; color: var(--secondary); font-weight: 500;">...</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overviewSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #dbeafe; color: #1e40af;">
+                            <i class="fas fa-list-ul"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total de Chamados</h3>
+                            <div class="value" id="statTotal">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #fef3c7; color: #92400e;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Pendentes</h3>
+                            <div class="value" id="statPendentes">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #dbeafe; color: #1e40af;">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Em Atendimento</h3>
+                            <div class="value" id="statAtendimento">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #d1fae5; color: #065f46;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Concluídas</h3>
+                            <div class="value" id="statConcluidas">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Acompanhamento (Últimos 7 dias)</h2>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div class="chart-container">
+                                <canvas id="ordersChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Distribuição por Status</h2>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div class="chart-container">
+                                <canvas id="statusPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Chamados Recentes</h2>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <button class="btn btn-outline" onclick="exportToPDF()">
+                                <i class="fas fa-download"></i> PDF
+                            </button>
+                            <button class="btn btn-primary" onclick="openModal('osModal')">
+                                <i class="fas fa-plus"></i> Novo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Localização</th>
+                                    <th>Prioridade</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersBody">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="ordersSection" class="hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; gap: 12px; flex: 1; flex-wrap: wrap;">
+                            <input type="text" id="searchOrder" placeholder="Buscar chamados..." oninput="loadOrders()"
+                                aria-label="Buscar chamados" style="flex: 1; min-width: 200px;">
+                            <select id="filterStatus" onchange="loadOrders()" aria-label="Filtrar por status"
+                                style="min-width: 150px;">
+                                <option value="">Todos Status</option>
+                                <option value="pendente">Pendente</option>
+                                <option value="em_atendimento">Em Atendimento</option>
+                                <option value="concluido">Concluído</option>
+                                <option value="nao_resolvido">Não Resolvido</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <button class="btn btn-outline" onclick="exportToPDF()">
+                                <i class="fas fa-download"></i> PDF
+                            </button>
+                            <button class="btn btn-primary" onclick="openModal('osModal')">
+                                <i class="fas fa-plus"></i> Novo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Localização</th>
+                                    <th>Prioridade</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersBody">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="usersSection" class="hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Gestão de Usuários</h2>
+                        <button class="btn btn-primary" onclick="openModal('userModal')">
+                            <i class="fas fa-user-plus"></i> Novo Usuário
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Telefone</th>
+                                    <th>Cargo</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersBody">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Delete User Confirmation Modal -->
+    <div id="deleteUserModal" class="modal" role="dialog" aria-labelledby="deleteUserModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="deleteUserModalTitle">Confirmar Exclusão</h2>
+                <button onclick="closeModal('deleteUserModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div style="color: var(--danger); font-size: 48px; margin-bottom: 16px;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p style="margin-bottom: 24px; color: var(--dark);">Tem certeza que deseja excluir este usuário? Esta
+                    ação não pode ser desfeita.</p>
+                <input type="hidden" id="deleteUserIdInput">
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;"
+                        onclick="closeModal('deleteUserModal')">Cancelar</button>
+                    <button type="button" class="btn btn-danger" style="flex: 1;"
+                        onclick="confirmDeleteUser()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Edit Modal -->
+    <div id="editUserModal" class="modal" role="dialog" aria-labelledby="editUserModalTitle" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="editUserModalTitle">Editar Usuário</h2>
+                <button onclick="closeModal('editUserModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    <div class="form-group">
+                        <label for="editRegName">Nome Completo</label>
+                        <input type="text" id="editRegName" name="editRegName" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="editRegEmail">E-mail</label>
+                        <input type="email" id="editRegEmail" name="editRegEmail" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="editRegRole">Cargo / Nível de Acesso</label>
+                        <select id="editRegRole" name="editRegRole">
+                            <option value="user">Usuário (Solicitante)</option>
+                            <option value="tecnico">Técnico (Atendimento)</option>
+                            <option value="admin">Administrador (Gestão Total)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserPhone">Telefone</label>
+                        <input type="text" id="editUserPhone" name="editUserPhone" placeholder="(00) 00000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label for="editRegPassword">Nova Senha (deixe em branco para manter)</label>
+                        <input type="password" id="editRegPassword" name="editRegPassword"
+                            placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1;"
+                            onclick="closeModal('editUserModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Create Modal -->
+    <div id="userModal" class="modal" role="dialog" aria-labelledby="userModalTitle" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Novo Usuário</h2>
+                <button onclick="closeModal('userModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="regName">Nome Completo</label>
+                        <input type="text" id="regName" name="regName" required placeholder="Ex: João Silva"
+                            aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">E-mail</label>
+                        <input type="email" id="regEmail" name="regEmail" required placeholder="exemplo@seduc.gov.br"
+                            aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="regRole">Cargo</label>
+                        <select id="regRole" name="regRole" required>
+                            <option value="user">Usuário Comum</option>
+                            <option value="tecnico">Técnico</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPhone">Telefone</label>
+                        <input type="text" id="userPhone" name="userPhone" placeholder="(00) 00000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Senha</label>
+                        <input type="password" id="regPassword" name="regPassword" required
+                            placeholder="Mínimo 6 caracteres" aria-required="true">
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1;"
+                            onclick="closeModal('userModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- OS Modal -->
+    <div id="osModal" class="modal" role="dialog" aria-labelledby="osModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h2 id="osModalTitle"><i class="fas fa-plus-circle"></i> Novo Chamado</h2>
+                <button onclick="closeModal('osModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="osForm">
+                    <div class="form-group">
+                        <label for="osTitle">Título do Problema</label>
+                        <input type="text" id="osTitle" name="osTitle" required
+                            placeholder="Ex: Internet lenta na sala dos professores" aria-required="true">
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="osLocation">Localização (Escola ou Setor)</label>
+                            <input type="text" id="osLocation" name="osLocation" required placeholder="Escola ou Setor"
+                                aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="osCategory">Categoria</label>
+                            <select id="osCategory" name="osCategory">
+                                <option value="suporte">Suporte Técnico</option>
+                                <option value="rede">Redes / Internet</option>
+                                <option value="hardware">Hardware / Peças</option>
+                                <option value="software">Software / Sistemas</option>
+                                <option value="impressora">Impressoras</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="osPriority">Prioridade</label>
+                        <select id="osPriority" name="osPriority">
+                            <option value="baixa">Baixa</option>
+                            <option value="media" selected>Média</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="osDescription">Descrição</label>
+                        <textarea id="osDescription" name="osDescription" required
+                            placeholder="Descreva o problema com detalhes..." style="min-height: 120px;"
+                            aria-required="true"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="osAttachmentFile">Anexar Foto (Opcional)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="osAttachmentFile" name="osAttachmentFile" accept="image/*"
+                                class="file-input">
+                            <div class="file-upload-design">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Clique ou arraste uma foto aqui</p>
+                                <span class="browse-btn">Selecionar arquivo</span>
+                            </div>
+                        </div>
+                        <div id="imagePreviewContainer" class="hidden"
+                            style="margin-top: 16px; position: relative; display: inline-block;">
+                            <img id="imagePreview" src="" alt="Prévia"
+                                style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 2px solid var(--accent); box-shadow: var(--shadow-md);">
+                            <button type="button" onclick="removeSelectedImage()"
+                                style="position: absolute; top: -10px; right: -10px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.2s;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" id="osAttachment" name="osAttachment">
+                    </div>
+
+                    <div
+                        style="display: flex; gap: 16px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);">
+                        <button type="button" class="btn btn-outline" style="flex: 1; height: 48px;"
+                            onclick="closeModal('osModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="flex: 1; height: 48px; font-weight: 700;">Abrir Chamado</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Conclusão de O.S. -->
+    <div id="concluirModal" class="modal" role="dialog" aria-labelledby="concluirModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="concluirModalTitle">Concluir Chamado</h2>
+                <button onclick="closeModal('concluirModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="concluirForm">
+                    <div class="form-group">
+                        <label for="solutionDescription">Descrição da Solução Aplicada</label>
+                        <textarea id="solutionDescription" name="solutionDescription" required
+                            placeholder="Descreva detalhadamente o que foi feito para resolver o problema..."
+                            style="min-height: 120px;" aria-required="true"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1;"
+                            onclick="closeModal('concluirModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="flex: 1; background: var(--success); border-color: var(--success);">Confirmar
+                            Conclusão</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Não Resolvido -->
+    <div id="naoResolvidoModal" class="modal" role="dialog" aria-labelledby="naoResolvidoModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="naoResolvidoModalTitle">Marcar como Não Resolvido</h2>
+                <button onclick="closeModal('naoResolvidoModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="naoResolvidoForm">
+                    <div class="form-group">
+                        <label for="failureReason">Motivo da Não Resolução</label>
+                        <textarea id="failureReason" name="failureReason" required
+                            placeholder="Explique por que o chamado não pôde ser resolvido no momento..."
+                            style="min-height: 120px;" aria-required="true"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1;"
+                            onclick="closeModal('naoResolvidoModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="flex: 1; background: var(--warning); border-color: var(--warning);">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Atribuição de Técnico -->
+    <div id="assignModal" class="modal" role="dialog" aria-labelledby="assignModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="assignModalTitle">Atribuir Técnico</h2>
+                <button onclick="closeModal('assignModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="assignForm">
+                    <div class="form-group">
+                        <label for="assignTecnico">Selecionar Técnico</label>
+                        <select id="assignTecnico" name="assignTecnico" required aria-required="true">
+                            <option value="">Selecione um técnico...</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1;"
+                            onclick="closeModal('assignModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Atribuir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cancelamento de O.S. -->
+    <div id="cancelarModal" class="modal" role="dialog" aria-labelledby="cancelarModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="cancelarModalTitle">Cancelar Chamado</h2>
+                <button onclick="closeModal('cancelarModal')" aria-label="Fechar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div
+                    style="background: #fee2e2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px;">
+                    <i class="fas fa-exclamation-circle" style="color: #991b1b; margin-top: 2px;"></i>
+                    <span style="font-size: 13px; color: #991b1b;">Esta acao nao pode ser desfeita. O chamado sera
+                        marcado como cancelado permanentemente.</span>
+                </div>
+                <form id="cancelarForm">
+                    <div class="form-group">
+                        <label for="cancellationReason">Motivo do Cancelamento</label>
+                        <textarea id="cancellationReason" name="cancellationReason" required
+                            placeholder="Explique por que o chamado esta sendo cancelado..." style="min-height: 120px;"
+                            aria-required="true"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1;"
+                            onclick="closeModal('cancelarModal')">Voltar</button>
+                        <button type="submit" class="btn btn-danger" style="flex: 1;">Confirmar Cancelamento</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- OS Details Modal -->
+    <div id="detailsModal" class="modal" role="dialog" aria-labelledby="detailsModalTitle" aria-modal="true">
+        <div class="modal-content" style="max-width: 950px; border-radius: 16px;">
+            <div class="modal-header"
+                style="background: white; border-bottom: 1px solid var(--border); padding: 24px 32px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div
+                        style="background: var(--accent); color: white; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div>
+                        <h2 id="detailsTitle"
+                            style="font-size: 20px; font-weight: 800; color: var(--primary); margin: 0;">Detalhes do
+                            Chamado</h2>
+                        <p id="detailsSubtitle"
+                            style="font-size: 13px; color: var(--secondary); margin: 2px 0 0 0; font-weight: 500;"></p>
+                    </div>
+                </div>
+                <button onclick="closeModal('detailsModal')" aria-label="Fechar modal"
+                    style="background: var(--light); border: none; width: 36px; height: 36px; border-radius: 20%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 10px; background: #f8fafc;">
+                <div class="details-grid">
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <!-- Descrição Principal -->
+                        <div
+                            style="background: white; padding: 28px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+                            <h3 class="info-label"
+                                style="font-size: 11px; margin-bottom: 16px; color: var(--accent); display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-align-left"></i> DESCRIÇÃO DO PROBLEMA
+                            </h3>
+                            <div id="detailsDesc"
+                                style="font-size: 15px; white-space: pre-wrap; line-height: 1.8; color: #334155; font-weight: 400;">
+                            </div>
+
+                            <div id="attachmentContainer" class="hidden"
+                                style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                                <h3 class="info-label" style="font-size: 11px; margin-bottom: 12px;">ANEXO</h3>
+                                <div id="attachmentPreview"></div>
+                            </div>
+                        </div>
+
+                        <!-- Comentários -->
+                        <div
+                            style="background: white; padding: 28px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+                            <h3 class="info-label"
+                                style="font-size: 11px; margin-bottom: 20px; color: var(--accent); display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-comments"></i> INTERAÇÕES E COMENTÁRIOS
+                            </h3>
+                            <div id="commentsList"
+                                style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; padding-right: 8px;">
+                                <!-- Comentários -->
+                            </div>
+                            <form id="commentForm"
+                                style="display: flex; gap: 12px; background: var(--light); padding: 8px; border-radius: 12px; border: 1px solid var(--border);">
+                                <input type="text" id="commentInput" placeholder="Escreva uma mensagem..." required
+                                    style="border: none; background: transparent; padding: 12px; font-size: 14px; flex: 1; outline: none;">
+                                <button type="submit" class="btn btn-primary"
+                                    style="width: 44px; height: 44px; border-radius: 10px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Histórico -->
+                        <div
+                            style="background: white; padding: 24px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+                            <h3 class="info-label"
+                                style="font-size: 11px; margin-bottom: 16px; color: var(--secondary); display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-history"></i> HISTÓRICO DE ATIVIDADES
+                            </h3>
+                            <div id="logsList" style="max-height: 150px; overflow-y: auto;">
+                                <!-- Logs -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Card de Status e Info -->
+                        <div
+                            style="background: white; padding: 24px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+                            <div
+                                style="margin-bottom: 24px; text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+                                <span class="info-label" style="margin-bottom: 8px; justify-content: center;">STATUS
+                                    ATUAL</span>
+                                <div id="detailsStatus" style="display: inline-block;"></div>
+                            </div>
+
+                            <div style="display: grid; gap: 16px;">
+                                <div class="info-item" style="margin: 0;">
+                                    <span class="info-label">PRIORIDADE</span>
+                                    <div id="detailsPriority"
+                                        style="font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                    </div>
+                                </div>
+                                <div class="info-item" style="margin: 0;">
+                                    <span class="info-label">SOLICITANTE</span>
+                                    <div id="detailsRequester" class="info-value" style="font-weight: 600;"></div>
+                                </div>
+                                <div class="info-item" style="margin: 0;">
+                                    <span class="info-label">TÉCNICO RESPONSÁVEL</span>
+                                    <div id="detailsTecnico" class="info-value" style="font-weight: 600;">-</div>
+                                </div>
+                                <div class="info-item" style="margin: 0;">
+                                    <span class="info-label">DATA DE ABERTURA</span>
+                                    <div id="detailsDate" class="info-value"
+                                        style="font-size: 13px; color: var(--secondary);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ações Técnicas -->
+                        <div id="adminActions" class="hidden"
+                            style="background: white; padding: 24px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+                            <h3 class="info-label" style="margin-bottom: 16px; font-size: 11px; color: var(--accent);">
+                                AÇÕES TÉCNICAS</h3>
+                            <div style="    display: grid; gap: 10px;grid-template-columns: repeat(auto-fit, minmax(min(100px, 100%), 1fr));">
+                                <button class="btn btn-primary"
+                                    style="width: 100%; justify-content: flex-start; height: 46px; border-radius: 10px;"
+                                    onclick="updateOSStatus('em_atendimento')">
+                                    <i class="fas fa-play" style="width: 20px;"></i> Iniciar Atendimento
+                                </button>
+                                <button class="btn btn-outline"
+                                    style="width: 100%; justify-content: flex-start; height: 46px; border-radius: 10px; background: #f0fdf4; color: #166534; border-color: #bbf7d0;"
+                                    onclick="closeModal('detailsModal'); openModal('concluirModal')">
+                                    <i class="fas fa-check-double" style="width: 20px;"></i> Concluir Chamado
+                                </button>
+                                <button class="btn btn-outline"
+                                    style="width: 100%; justify-content: flex-start; height: 46px; border-radius: 10px; background: #fffbeb; color: #92400e; border-color: #fef3c7;"
+                                    onclick="closeModal('detailsModal'); openModal('naoResolvidoModal')">
+                                    <i class="fas fa-exclamation-triangle" style="width: 20px;"></i> Não Resolvido
+                                </button>
+                                <button id="btnAssignTecnico" class="btn btn-outline"
+                                    style="width: 100%; justify-content: flex-start; height: 46px; border-radius: 10px; background: #eff6ff; color: #1e40af; border-color: #dbeafe;"
+                                    onclick="closeModal('detailsModal'); openAssignModal()">
+                                    <i class="fas fa-user-plus" style="width: 20px;"></i> Atribuir Técnico
+                                </button>
+                                <button id="btnCancelOS" class="btn btn-danger"
+                                    style="width: 100%; justify-content: flex-start; height: 46px; border-radius: 10px; margin-top: 10px;"
+                                    onclick="closeModal('detailsModal'); openModal('cancelarModal')">
+                                    <i class="fas fa-times-circle" style="width: 20px;"></i> Cancelar O.S.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Exportação -->
+                        <div id="printActions" class="hidden"
+                            style="background: #f1f5f9; padding: 24px; border-radius: 16px; border: 1px solid var(--border);">
+                            <h3 class="info-label" style="margin-bottom: 16px; font-size: 11px;">EXPORTAÇÃO</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <button class="btn btn-outline"
+                                    style="background: white; border-radius: 10px; height: 44px; font-size: 13px;"
+                                    onclick="printOS(currentOSId)">
+                                    <i class="fas fa-print"></i> Imprimir
+                                </button>
+                                <button class="btn btn-outline"
+                                    style="background: white; border-radius: 10px; height: 44px; font-size: 13px;"
+                                    onclick="generateOSPDF(currentOSId)">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/print-os.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>
